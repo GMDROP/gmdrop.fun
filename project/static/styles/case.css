@@ -1,0 +1,107 @@
+.createcase .block {
+    background-color: #2b3035;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.createcase .block input {
+    margin-top: 10px;
+    padding: 10px 16px;
+    border-radius: 16px;
+    border: none;
+    background: transparent;
+    border: 1px solid #7a7979;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.createcase .block label {
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.app {
+    margin-top: 1.5rem;
+    position: relative;
+    background: #1b1f24;
+    border-radius: 20px;
+    box-shadow: 0px 0px 7px #ffeb3b80;
+}
+
+.app .pointer {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    transform: translate3d(-50%, -25px, 0);
+    height: 50px;
+    filter: drop-shadow(0 0 20px rgba(230, 174, 174, 0.3));
+}
+
+.app .scope {
+    overflow: hidden;
+}
+
+.app .scope .list {
+    position: relative;
+    display: inline-flex;
+    left: 0;
+    transform: translate3d(-164px, 0, 0);
+    list-style: none;
+    transition: 9s cubic-bezier(0.21, 0.53, 0.29, 0.99);
+}
+
+.app .scope .list__item {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 160px;
+    opacity: 0.5;
+    transition: 0.3s ease;
+}
+
+.app .scope .list__item:not(:last-child) {
+    margin-right: 7px;
+}
+
+.app .scope .list__item.active {
+    opacity: 1;
+}
+
+.app .scope .list__item.active img {
+    transform: scale(1.05);
+}
+
+.app .scope .list__item img {
+    width: 80%;
+    height: 80%;
+    -o-object-fit: contain;
+    object-fit: contain;
+    transition: 0.3s ease;
+}
+
+.app .start {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate3d(-50%, 20px, 0);
+    /*padding: 8px 25px;*/
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    /*border: 1px solid #ffb374;*/
+    /*background-color: #ffb374;*/
+    font-size: 1rem;
+    color: black;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+}
+
+.app .start:hover {
+    opacity: 0.8;
+}

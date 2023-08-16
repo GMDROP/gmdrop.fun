@@ -1,0 +1,36 @@
+.profile-list {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+.profile-list .block {
+    background: #1b1f24;
+    border-radius: 20px;
+}
+
+.profile-list .prf-list {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 90px;
+    max-width: 400px;
+}
+
+.profile-list .avatar-profile {
+    margin-top: -80px;
+    display: inline-block;
+    background: #ffb374;
+    background: -webkit-linear-gradient(131deg, #ffb374 0%, #20c997 100%);
+    background: linear-gradient(131deg, #ffb374 0%, #20c997 100%);
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.profile-list .avatar-profile img {
+    width: 130px px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+}

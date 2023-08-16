@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block container %}
+<div class="modal" id="modal_one">
+    <div class="container">
+        <div id="get_price" class="block"></div>
+    </div>
+</div>
+<div class="container">
+    <h1 style="    text-align: center;
+    padding: 14px 0;
+    color: white;">{{ case.name }}</h1>
+    <div class="app">
+        <img class="pointer" src="{% static 'img/str.png' %}" alt="">
+        <div class="scope">
+            <ul class="list"></ul>
+        </div>
+
+        <div class="start">
+            <button id="case_crut" onclick="start({{ case.price }})" class="btn">Крутить за {{ case.price }} YС</button>
+        </div>
+    </div>
+</div>
+<div style="    margin-top: 6rem;" class="container">
+    <h1 style="    text-align: center;
+    padding: 14px 0;
+    color: white;">Содержимое Кейса</h1>
+    <div class="weapons item-container">
+        {% for w in weapons %}
+        <div class="item l__{{ w.leg }}">
+            <img src="/media/{{ w.img }}" alt=""/>
+            <p>
+                {% if w.stattrak %}
+                <span style="    color: #c1c11b;
+    font-size: 0.8rem;">StatTrak</span>
+                {% endif %}
+                {{ w.model_w }} {{ w.name }}</p>
+            <p>{{ w.price }} YL</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<style>
+    .list {
+        margin-top: 1rem;
+    }
+    #bay{
+        background: linear-gradient(143deg, #FF9800 40%, #cd3281 100%);
+        color: #fff;
+        font-size: 1.2rem;
+        font-family: 'Roboto';
+        font-weight: 500;
+        box-shadow: 0px 0px 5px 1px #FF9800;
+    }
+    #case_crut, #case_crut_3{
+        background: linear-gradient(134deg, #00BCD4 20%, #673AB7 100%);
+        color: #fff;
+        font-size: 1.2rem;
+        font-family: 'Roboto';
+        font-weight: 500;
+        box-shadow: 0px 0px 5px 1px #00BCD4;
+    }
+
+    .modal {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        display: none;
+        background: #444444ab;
+        backdrop-filter: blur(3px);
+    }
+    .modal .container {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        align-items: center;
+    }
+
+    .modal .block {
+        background: #1b1f24;
+        border-radius: 20px;
+        max-width: 400px;
+        text-align: center;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .modal .block h2{
+        color: #fff;
+        padding: 10px 0;
+    }
+
+    .modal .block a{
+        margin: 10px 0;
+    }
+    .modal .block img{
+        width: 100%;
+    }
+    .modal .block p{
+        margin: 0;
+        font-size: 1.3rem;
+        color: white;
+        padding: 10px;
+    }
+
+    .modal .tp{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+    const cells = 31
+    let win = 0
+    let sw_id = 0
+    const audioObj = new Audio('/static/song/case.mp3');
+
+    function randomInteger(min, max) {
+      let rand = min - 0.5 + Math.random() * (max - min + 1);
+      return Math.round(rand);
+    }
+
+
+    // From 0.001 to 100
+    const items = [
+        {% for w in weapons %}
+            {
+                name: '{{ w.name }}',
+                img: '{{ w.img.url }}',
+                leg : '{{ w.leg }}',
+                model: '{{ w.model_w }}',
+                price: {{ w.price }},
+                stattrak: '{{ w.stattrak }}'
+            },
+        {% endfor %}
+    ]
+
+    const price = []
+    let nnum = 0
+    function getItem(i) {
+        let item;
+
+        if (nnum < items.length) {
+            item = items[nnum]
+            nnum += 1
+        } else {
+            nnum = 0
+            item = items[nnum]
+        }
+
+        return item
+    }
+
+     function generateStartItems() {
+        document.querySelector('.list').remove()
+        document.querySelector('.scope').innerHTML = `<ul class="list"></ul>`
+
+        const list = document.querySelector('.list')
+
+        for (let i = 0; i < cells; i++) {
+            const item = getItem()
+            const li = document.createElement('li')
+
+            li.classList.add(`list__item`)
+            li.classList.add(`l__${item.leg}`)
+            li.innerHTML = `
+            <img src="${item.img}" alt="" />
+            `
+
+            list.append(li)
+            }
+        }
+
+    function generateItems() {
+        document.querySelector('.list').remove()
+        document.querySelector('.scope').innerHTML = `<ul class="list"></ul>`
+
+        const list = document.querySelector('.list')
+
+        for (let i = 0; i < cells; i++) {
+            const item = getItem(i)
+            const li = document.createElement('li')
+
+            if (i === 15) {
+                $.get('/case/get_price/{{ case.id }}', function (data) {
+                    win = data.item
+
+                    sw_id = data.sw_id
+                    const item = items[win]
+                    li.classList.add(`list__item`)
+                    li.classList.add(`l__${item.leg}`)
+                    li.innerHTML = `<img src="${item.img}" alt="" />`
+                    console.log(win)
+                });
+
+                list.append(li)
+            } else {
+                li.classList.add(`list__item`)
+                li.classList.add(`l__${item.leg}`)
+                li.innerHTML = `<img src="${item.img}" alt="" />`
+
+                list.append(li)
+            }
+        }
+    }
+
+    generateStartItems()
+
+    let isStarted = false
+    let isFirstStart = true
+    let st = ''
+
+    function start(i) {
+        $.get(`/get-balance/`, function (data) {
+            let balance = data.balance
+            if ({{ case.price }} <= balance) {
+                $('#case_crut').prop( "disabled", true )
+                generateItems()
+
+                audioObj.play();
+                audioObj.volume = 0.5
+
+                const list = document.querySelector('.list')
+
+                setTimeout(() => {
+                    list.style.left = '50%'
+                    list.style.transform = 'translate3d(-3240px, 0, 0)'
+                }, 0)
+
+                const item = list.querySelectorAll('li')[15]
+
+                // list.addEventListener('transitionend', () => {
+                //     isStarted = false
+                //     item.classList.add('active')
+                //
+                //     // console.log(data);
+                // }, {once: true})
+
+                setTimeout(() => {
+                    $('#case_crut').prop( "disabled", false )
+                    isStarted = false
+                    item.classList.add('active')
+                    item_ = items[win]
+                    const gp = document.querySelector('#get_price')
+                    console.log(item_.stattrak)
+                    if (item_.stattrak === 'True') {
+                     gp.innerHTML = `<div>
+                    <img style="position: absolute;
+        left: 0;
+        top: -57px;
+        opacity: 0.1;" src="/static/img/fon_${item_.leg}.png" alt="" />
+                    <div class="l__${item_.leg}">
+                    <h2>Ваш Приз!</h2>
+                    <img src="${item_.img}" alt="" />
+                    <p>
+                    <span style="    color: #c1c11b;
+    font-size: 1rem;">StatTrak</span>
+                ${item_.model} ${item_.name}</p>
+                    <div class="tp">
+                    <button id="case_crut_3" class="btn">Ещё раз</button>
+                    <button id="bay" class="btn">Продать за ${item_.price} YC</button>
+                    </div>
+                    </div></div>
+                    `
+                    } else {
+                        gp.innerHTML = `<div>
+                    <img style="position: absolute;
+        left: 0;
+        top: -57px;
+        opacity: 0.1;" src="/static/img/fon_${item_.leg}.png" alt="" />
+                    <div class="l__${item_.leg}">
+                    <h2>Ваш Приз!</h2>
+                    <img src="${item_.img}" alt="" />
+                    <p>
+                ${item_.model} ${item_.name}</p>
+                    <div class="tp">
+                    <button id="case_crut_3" class="btn">Ещё раз</button>
+                    <button id="bay" class="btn">Продать за ${item_.price} YC</button>
+                    </div>
+                    </div></div>
+                    `
+                    }
+
+                    $('#modal_one').css('display', 'block')
+                    // $('#bay').css('display', 'block')
+
+                }, 9000)
+            }
+        })
+    }
+    $(document).on("click", "#bay", function(event){
+         $.get(`http://gmdrop.fun/profile/weapon/${sw_id}`, function (data) {})
+    });
+    $(document).on("click", "#case_crut_3", function(event){
+         start({{ case.price }})
+        console.log(event)
+    });
+    $('.modal').click(() => {
+        $('#modal_one').css('display', 'none')
+    })
+</script>
+{% endblock container %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Панель администратора
+{% endblock %}
+
+{% block container %}
+<div class="personal">
+    <h2 class="pt-4 text-white text-center ">Панель администратора GMDROP</h2>
+    <div class="container">
+        <ul class="nav nav-pills nav-fill">
+              <li class="nav-item">
+                  <a class="nav-link" href="/personal-admin/">Кейсы</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/personal-admin/weapons">Оружие</a>
+              </li>
+            <li class="nav-item">
+                  <a class="nav-link active" href="/personal-admin/categories">Категории</a>
+            </li>
+        </ul>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <a class="btn t" href="/personal-admin/categories/create/">Создать категорию</a>
+        </div>
+        <div class="item-container">
+            {% for c in categories %}
+                <a class="item" href="/personal-admin/categories/{{ c.id }}">
+                    <p class="name" style="margin: 0 !important;">{{ c.name }}</p>
+<!--                    <div class="btn price">{{ c.position }} YC</div>-->
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

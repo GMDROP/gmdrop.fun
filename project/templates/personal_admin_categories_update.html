@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Редактирование кейса
+{% endblock %}
+
+{% block container %}
+<div class="personal">
+    <h2 class="pt-4 text-white text-center ">Редактировать кейс {{ categories.name }}</h2>
+    <div class="container">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="block">
+        <label for="id_name">Название категории</label>
+        {{ form.name }}
+      </div>
+      <div class="block">
+        <label for="id_price">Позицианирование</label>
+        {{ form.position }}
+      </div>
+      <div style="
+    position: absolute;
+    left: -99999%;">{{ form.cases_arr }}</div>
+      <div class="d-grid gap-2 col-6 mx-auto mt-3">
+        <button class="btn a" type="submit">Изменить</button>
+      </div>
+    </form>
+        <div class="weapons item-container">
+        {% for w in cases %}
+          <div class="item www" id="weapon_{{ w.id }}" data-id="{{ w.id }}">
+            <img src="{{ w.img.url }}" alt="" />
+            <p>{{ w.name }}</p>
+            <p>{{ w.price }} YC</p>
+            <div>
+              <button onclick="del_weapons({{ w.id }})" type="button" class="btn a add__btn" id="btn_{{ w.id }}">Удалить</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="weapons item-container">
+        {% for w in cases %}
+          <div class="item sss" id="weapon_2_{{ w.id }}">
+            <img src="{{ w.img.url }}" alt="" />
+            <p>{{ w.name }}</p>
+            <p>{{ w.price }} YC</p>
+            <div>
+              <button onclick="add_weapons({{ w.id }})" type="button" class="btn a add__btn" id="btn_2_{{ w.id }}">Добавить</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+    let weapons = [
+      {% for w in case %}
+        {"id": {{ w.id }}},
+      {% endfor %}
+    ]
+
+    let weapon = ''
+
+    weapons.map(el => {
+      $(`#weapon_${el.id}`).addClass('active')
+      $(`#weapon_2_${el.id}`).addClass('active_2')
+    })
+
+    setInterval(() => {
+      const weap = $('.active').toArray()
+      let num = 0
+
+      weap.map(el => {
+        const w_id = $(el).attr('data-id')
+        if (w_id !== undefined){
+         let chance = $(`#inp_chance_${w_id}`).val()
+
+          if (num === 0){
+              weapon += (`{"id": ${w_id}}`)
+              num += 1
+          } else {
+              weapon += (`, {"id": ${w_id}}`)
+          }
+        }
+      })
+
+      update_weapons(weapon)
+      console.log(weapon)
+
+    }, 1000)
+
+    const add_weapons = (id) => {
+      $(`#weapon_${id}`).addClass('active')
+      $(`#weapon_2_${id}`).addClass('active_2')
+      $(`#inp_chance_${id}`).val($(`#inp_chance_2_${id}`).val())
+    }
+
+    const del_weapons = (id) => {
+      $(`#weapon_${id}`).removeClass('active')
+      $(`#weapon_2_${id}`).removeClass('active_2')
+      $(`#inp_chance_2_${id}`).val('')
+    }
+
+    const update_weapons = json => {
+      weapon = ''
+      $('#id_cases_arr').val(`[${json}]`)
+    }
+</script>
+{% endblock %}

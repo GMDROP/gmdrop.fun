@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Создание оружия
+{% endblock %}
+
+{% block container %}
+<div class="personal">
+    <h2 class="pt-4 text-white text-center ">Создать оружие</h2>
+    <div class="container">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="block">
+        <label for="id_name">Название оружия</label>
+        {{ form.name }}
+      </div>
+      <div class="block">
+        <label for="id_name">Модель оружия</label>
+        {{ form.model_w }}
+      </div>
+      <div class="block">
+        <label for="id_price">Цена оружия</label>
+        {{ form.price }}
+      </div>
+      <div class="block">
+        <label for="id_price">Редкость оружия</label>
+        {{ form.leg }}
+      </div>
+      <div class="block">
+        <label for="id_price">StatTrak</label>
+        {{ form.stattrak }}
+      </div>
+      <div class="block">
+        <label for="id_img">Изображение оружия</label>
+          <img class="img_case" src="{{ weapons.img.url }}" alt="">
+        {{ form.img }}
+      </div>
+      <div class="d-grid gap-2 col-6 mx-auto mt-3">
+        <button class="btn a" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+{% endblock %}

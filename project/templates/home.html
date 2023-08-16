@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block container %}
+<div class="container">
+    <div class="block">
+        <img style="    width: 100%;
+    border-radius: 20px;
+    margin-bottom: 20px;" src="{% static 'img/fon_54.jpg' %}" alt="">
+        {% for c in cases %}
+            <h2 class="title">{{ c.name }}</h2>
+            <div class="item-container">
+                {% for w in c.cases_array %}
+                    <a class="item" href="/case/{{ w.id }}">
+                        <img src="{{ w.img.url }}" alt="">
+                        <p class="name">{{ w.name }}</p>
+                        <div class="btn price">{{ w.price }} YC</div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock container %}
+
